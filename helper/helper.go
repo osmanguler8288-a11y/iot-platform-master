@@ -9,6 +9,9 @@ import (
 	"iot-platform-master/define"
 	"net/http"
 	"strings"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func Md5(s string) string {
@@ -88,4 +91,20 @@ func HttpPost(url string, data []byte, header ...byte) ([]byte, error) {
 
 func HttpGet(url string, header ...byte) ([]byte, error) {
 	return httpRequest(url, "GET", []byte{}, header)
+}
+func GenerateToken(id uint, identity, name string, second int) (string, error) {
+	uc := define.UserClaim{
+		Id:       id,
+		Identity: identity,
+		Name:     name,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Second * time.Duration(second))),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, uc)
+	tokenString, err := token.SignedString([]byte(define.JwtKey))
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
