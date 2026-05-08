@@ -11,7 +11,7 @@ import (
 var DB *gorm.DB
 
 func NewDB() {
-	dsn := define.MySqlDSN + "/iot-platform?charset=utf8mb4&parseTime=True&loc=Local" //后面是数据库的名称
+	dsn := define.MysqlDSN + "/iot-platform?charset=utf8mb4&parseTime=True&loc=Local" //后面是数据库的名称
 
 	db, err := gorm.Open(mysql.Open(dsn))
 	if err != nil {

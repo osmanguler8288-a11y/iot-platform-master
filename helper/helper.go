@@ -4,15 +4,11 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"gitee/getcharzp/iot-platform/define"
 	"io/ioutil"
+	"iot-platform-master/define"
 	"net/http"
 	"strings"
-	"time"
-
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func Md5(s string) string {
@@ -31,46 +27,6 @@ func If(condition bool, trueValue, falseValue interface{}) interface{} {
 	return falseValue
 }
 
-// RFC3339ToNormalTime RFC3339 日期格式标准化
-func RFC3339ToNormalTime(rfc3339 string) string {
-	if len(rfc3339) < 19 || rfc3339 == "" || !strings.Contains(rfc3339, "T") {
-		return rfc3339
-	}
-	return strings.Split(rfc3339, "T")[0] + " " + strings.Split(rfc3339, "T")[1][:8]
-}
-
-func GenerateToken(id uint, identity, name string, second int) (string, error) {
-	uc := define.UserClaim{
-		Id:       id,
-		Identity: identity,
-		Name:     name,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Second * time.Duration(second))),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, uc)
-	tokenString, err := token.SignedString([]byte(define.JwtKey))
-	if err != nil {
-		return "", err
-	}
-	return tokenString, nil
-}
-
-func AnalyzeToken(token string) (*define.UserClaim, error) {
-	uc := new(define.UserClaim)
-	claims, err := jwt.ParseWithClaims(token, uc, func(token *jwt.Token) (interface{}, error) {
-		return []byte(define.JwtKey), nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	if !claims.Valid {
-		return uc, errors.New("token is invalid")
-	}
-	return uc, err
-}
-
-// httpRequest .
 func httpRequest(url, method string, data, header []byte) ([]byte, error) {
 	var err error
 	reader := bytes.NewBuffer(data)
@@ -108,6 +64,14 @@ func httpRequest(url, method string, data, header []byte) ([]byte, error) {
 	}
 
 	return respBytes, nil
+}
+
+// RFC3339ToNormalTime RFC3339 日期格式标准化
+func RFC3339ToNormalTime(rfc3339 string) string {
+	if len(rfc3339) < 19 || rfc3339 == "" || !strings.Contains(rfc3339, "T") {
+		return rfc3339
+	}
+	return strings.Split(rfc3339, "T")[0] + " " + strings.Split(rfc3339, "T")[1][:8]
 }
 
 func HttpDelete(url string, data []byte, header ...byte) ([]byte, error) {

@@ -1,6 +1,6 @@
 package models
 
-import "github.com/jinzhu/gorm"
+import "gorm.io/gorm"
 
 type ProductBasic struct {
 	gorm.Model
@@ -10,4 +10,11 @@ type ProductBasic struct {
 }
 func (table ProductBasic) TableName() string {
 	return "product_basic"
+}
+func ProductList(name string) *gorm.DB {
+	tx := DB.Model(new(ProductBasic)).Select("identity, name, `desc`, `key`, created_at")
+	if name != "" {
+		tx.Where("name LIKE ?", "%"+name+"%")
+	}
+	return tx
 }
