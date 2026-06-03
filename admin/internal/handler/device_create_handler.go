@@ -5,27 +5,23 @@ package handler
 
 import (
 	"net/http"
-	"strconv"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"iot-platform-master/admin/internal/logic"
 	"iot-platform-master/admin/internal/svc"
 	"iot-platform-master/admin/internal/types"
-
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func DeiviceListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeviceCreateHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.DeviceListRequest
+		var req types.DeviceCreateRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-		req.Page, _ = strconv.Atoi(r.URL.Query().Get("page"))
-		req.Size, _ = strconv.Atoi(r.URL.Query().Get("size"))
-		req.Name= r.URL.Query().Get("name")
-		l := logic.NewDeiviceListLogic(r.Context(), svcCtx)
-		resp, err := l.DeiviceList(&req)
+
+		l := logic.NewDeviceCreateLogic(r.Context(), svcCtx)
+		resp, err := l.DeviceCreate(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

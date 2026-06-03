@@ -1,21 +1,20 @@
 package svc
 
 import (
+	"iot-platform-master/device/internal/config"
 	"iot-platform-master/models"
-	"iot-platform-master/user/internal/config"
-
-	"gorm.io/gorm"
+"gorm.io/gorm"
 )
 
 type ServiceContext struct {
 	Config config.Config
-	DB     *gorm.DB
+	DB *gorm.DB
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	models.NewDB()
 	return &ServiceContext{
 		Config: c,
-		DB:     models.DB,
+		DB: models.DB,
 	}
 }

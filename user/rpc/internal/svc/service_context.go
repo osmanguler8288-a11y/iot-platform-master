@@ -2,7 +2,7 @@ package svc
 
 import (
 	"iot-platform-master/models"
-	"iot-platform-master/user/internal/config"
+	"iot-platform-master/user/rpc/internal/config"
 
 	"gorm.io/gorm"
 )

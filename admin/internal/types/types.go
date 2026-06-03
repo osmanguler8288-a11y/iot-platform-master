@@ -3,21 +3,89 @@
 
 package types
 
-type DeiviceListRequest struct {
+type BaseRequest struct {
 	Page int    `json:"page,optional"`
 	Size int    `json:",optional"`
 	Name string `json:"name,optional"`
 }
 
-type DeviceListBasic struct {
-	Identity    string `json:"identity"`
-	Name        string `json :"name"`
-	Key         string `json:"key"`
-	Secret      string `json :"secret"`
-	ProductName string `json:"product_name"`
+type DeviceCreateReply struct {
+}
+
+type DeviceCreateRequest struct {
+	Name            string `json:"name"`
+	ProductIdentity string `json:"product_identity"`
+}
+
+type DeviceDeleteReply struct {
+}
+
+type DeviceDeleteRequest struct {
+	Identity string `json:"identity"`
+}
+
+type DeviceListBaisc struct {
+	Identity       string `json:"identity"`
+	Name           string `json:"name"`
+	Key            string `json:"key"`
+	Secret         string `json:"secret"`
+	ProductName    string `json:"product_name"`
+	LastOnlineTime int64  `json:"last_online_time"`
 }
 
 type DeviceListReply struct {
-	List  []*DeviceListBasic `json:"list"`
+	List  []*DeviceListBaisc `json:"list"`
 	Count int64              `json:"count"`
+}
+
+type DeviceListRequest struct {
+	BaseRequest
+}
+
+type DeviceModifyReply struct {
+}
+
+type DeviceModifyRequest struct {
+	Identity string `json:"identity"`
+	DeviceCreateRequest
+}
+
+type ProductCreateReply struct {
+}
+
+type ProductCreateRequest struct {
+	Name string `json:"name"`
+	Desc string `json:"desc"`
+}
+
+type ProductDeleteReply struct {
+}
+
+type ProductDeleteRequest struct {
+	Identity string `json:"identity"`
+}
+
+type ProductListBaisc struct {
+	Identity  string `json:"identity"`
+	Key       string `json:"key"`
+	Name      string `json:"name"`
+	Desc      string `json:"desc"`
+	CreatedAt string `json:"created_at"`
+}
+
+type ProductListReply struct {
+	List  []*ProductListBaisc `json:"list"`
+	Count int64               `json:"count"`
+}
+
+type ProductListRequst struct {
+	BaseRequest
+}
+
+type ProductModifyReply struct {
+}
+
+type ProductModifyRequest struct {
+	Identity string `json:"identity"`
+	ProductCreateRequest
 }
