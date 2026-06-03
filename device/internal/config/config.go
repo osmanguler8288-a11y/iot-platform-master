@@ -9,6 +9,7 @@ type Config struct {
 	Mqtt struct {
 		Broker   string
 		ClientID string
+		Username string
 		Password string
 	}
 }

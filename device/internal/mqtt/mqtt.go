@@ -12,9 +12,9 @@ import (
 var topic = "/sys/#"
 var MC mqtt.Client
 
-func NewMqttServer(mqttBroker, clientID, password string) {
-	opt := mqtt.NewClientOptions().AddBroker(mqttBroker).SetClientID("go-mqtt-server-client-id").
-		SetUsername("get").SetPassword(password)
+func NewMqttServer(broker, clientID, username, password string) {
+	opt := mqtt.NewClientOptions().AddBroker(broker).SetClientID(clientID).
+		SetUsername(username).SetPassword(password)
 
 	// 回调
 	opt.SetDefaultPublishHandler(publishHandler)
@@ -31,15 +31,9 @@ func NewMqttServer(mqttBroker, clientID, password string) {
 		panic(token.Error())
 	}
 
-	defer func() {
-		// 取消订阅
-		if token := MC.Unsubscribe(topic); token.Wait() && token.Error() != nil {
-			log.Println("[ERROR] : ", token.Error())
-		}
-		// 关闭连接
-		MC.Disconnect(250)
-	}()
+	log.Println("[MQTT] connected and subscribed to", topic)
 
+	// 阻塞，保持 MQTT 连接存活（MQTT 库内部有 keepalive 机制）
 	select {}
 }
 func publishHandler(client mqtt.Client, message mqtt.Message) {

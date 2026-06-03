@@ -3,6 +3,8 @@ package logic
 import (
 	"context"
 
+	"errors"
+	"iot-platform-master/device/internal/mqtt"
 	"iot-platform-master/device/internal/svc"
 	"iot-platform-master/device/types/device"
 
@@ -24,7 +26,12 @@ func NewSendMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendM
 }
 
 func (l *SendMessageLogic) SendMessage(in *device.SendMessageRequest) (*device.SendMessageReply, error) {
-	// todo: add your logic here and delete this line
-
+	if in.ProductKey == "" || in.DeviceKey == "" || in.Data == "" {
+		return nil, errors.New("参数异常")
+	}
+	topic := "/sys/" + in.ProductKey + "/" + in.DeviceKey + "/receive"
+	if token := mqtt.MC.Publish(topic, 0, false, in.Data); token.Wait() && token.Error() != nil {
+		return nil, token.Error()
+	}
 	return &device.SendMessageReply{}, nil
 }

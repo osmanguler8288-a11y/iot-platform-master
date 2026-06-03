@@ -1,10 +1,11 @@
-package main
+package device
 
 import (
 	"flag"
 	"fmt"
 
 	"iot-platform-master/device/internal/config"
+	"iot-platform-master/device/internal/mqtt"
 	"iot-platform-master/device/internal/server"
 	"iot-platform-master/device/internal/svc"
 	"iot-platform-master/device/types/device"
@@ -24,6 +25,9 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
+
+	// 启动 MQTT 客户端（goroutine 保持常驻连接）
+	go mqtt.NewMqttServer(c.Mqtt.Broker, c.Mqtt.ClientID, c.Mqtt.Username, c.Mqtt.Password)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		device.RegisterDeviceServer(grpcServer, server.NewDeviceServer(ctx))
