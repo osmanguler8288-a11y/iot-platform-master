@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker info *)",
+      "Bash(docker search *)",
+      "Bash(docker pull *)",
+      "Bash(docker tag *)",
+      "Bash(winget list *)",
+      "Bash(choco list *)",
+      "Bash(curl --proxy socks5://127.0.0.1:7890 -s \"https://hub.docker.com/v2/repositories/bitnami/etcd/tags?page_size=5\")",
+      "Bash(curl -L --proxy socks5://127.0.0.1:7890 -o __TRACKED_VAR__/etcd.zip https://github.com/etcd-io/etcd/releases/download/v3.5.17/etcd-v3.5.17-windows-amd64.zip)",
+      "Bash(unzip -o __TRACKED_VAR__/etcd.zip -d __TRACKED_VAR__/etcd-bin)",
+      "Bash(curl -s http://127.0.0.1:2379/version)",
+      "Bash(docker start *)",
+      "Bash(docker inspect *)",
+      "Bash(curl -s http://127.0.0.1:18083/api/v5/status)",
+      "Bash(docker exec *)"
+    ]
+  }
+}

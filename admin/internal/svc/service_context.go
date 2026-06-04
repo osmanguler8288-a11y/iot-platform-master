@@ -5,6 +5,7 @@ package svc
 
 import (
 	"iot-platform-master/admin/internal/config"
+	"iot-platform-master/device/device_client"
 	"iot-platform-master/models"
 	"iot-platform-master/user/rpc/user_client"
 
@@ -13,17 +14,19 @@ import (
 )
 
 type ServiceContext struct {
-	Config   config.Config
-	DB       *gorm.DB
-	RpcUser  user_client.User
-	AuthUser *user_client.UserAuthReply
+	Config    config.Config
+	DB        *gorm.DB
+	RpcUser   user_client.User
+	RpcDevice device_client.Device
+	AuthUser  *user_client.UserAuthReply
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	models.NewDB()
 	return &ServiceContext{
-		Config:  c,
-		DB:      models.DB,
-		RpcUser: user_client.NewUser(zrpc.MustNewClient(c.RpcClientConf)),
+		Config:    c,
+		DB:        models.DB,
+		RpcUser:   user_client.NewUser(zrpc.MustNewClient(c.RpcClientConf)),
+		RpcDevice: device_client.NewDevice(zrpc.MustNewClient(c.RpcClientConf)),
 	}
 }
